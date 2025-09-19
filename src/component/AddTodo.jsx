@@ -1,15 +1,24 @@
-import React, { useState } from 'react';
+import React, { useRef } from "react";
 import { IoAddOutline } from "react-icons/io5";
 
-
 const AddTodo = ({ onNewItemAdded }) => {
-  const [todoName, setTodoName] = useState("");
-  const [dueDate, setDueDate] = useState("");
+  const todoName = useRef();
+  const dueDate = useRef();
 
   const handleAdd = () => {
-    onNewItemAdded(todoName, dueDate);
-    setTodoName("");
-    setDueDate("");
+    const name = todoName.current.value.trim();
+    const date = dueDate.current.value;
+
+    if (!name || !date) {
+      alert("Please enter todo name and due date!");
+      return;
+    }
+
+    onNewItemAdded(name, date);
+
+    // reset inputs
+    todoName.current.value = "";
+    dueDate.current.value = "";
   };
 
   return (
@@ -20,25 +29,14 @@ const AddTodo = ({ onNewItemAdded }) => {
             type="text"
             className="form-control"
             placeholder="Enter todo..."
-            value={todoName}
-            onChange={(e) => setTodoName(e.target.value)}
-            required
+            ref={todoName}
           />
         </div>
         <div className="col-4">
-          <input
-            type="date" 
-            className="form-control "
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-            required
-          />
+          <input type="date" className="form-control" ref={dueDate} />
         </div>
         <div className="col-3">
-          <button
-            className="btn btn-primary w-100"
-            onClick={handleAdd}
-          >
+          <button className="btn btn-primary w-100" onClick={handleAdd}>
             <IoAddOutline size={20} /> Add Task
           </button>
         </div>

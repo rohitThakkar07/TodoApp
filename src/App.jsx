@@ -1,38 +1,38 @@
-import AppName from './component/AppName'
-import AddTodo from './component/AddTodo';
-import TodoItem from './component/TodoItem';
-import { useState } from 'react';
-import ErrorMsg from './component/ErrorMsg';
+import React, { useState } from "react";
+import AddTodo from "";
+import TodoList from "./TodoList";
 
+function App() {
+  const [todos, setTodos] = useState([]);
 
-const App = () => {
-   const [todoItem,setTodoItem] = useState([ {
-      name:"Buy Ghee",
-      dueDate:"25/07/2024"
-    }]);
-
-    const onNewItemAdded=(name,date)=>{
-      setTodoItem([...todoItem,{name:name,dueDate:date}]);
-      todoItem.name="";
-      todoItem.dueDate="";
+  // Function passed to AddTodo
+  const handleNewItemAdded = (name, date) => {
+    if (!name || !date) {
+      alert("Please enter both task and date!");
+      return;
     }
 
-const handleDelete = (id) => {
+    const newTodo = {
+      id: Date.now(),
+      name,
+      date,
+    };
 
-  const updatedItems = todoItem.filter((_, index) => index !== id);
+    setTodos([...todos, newTodo]);
+  };
 
-  setTodoItem(updatedItems);
-};
+  // Function for deleting a todo
+  const handleDelete = (id) => {
+    setTodos(todos.filter((todo) => todo.id !== id));
+  };
 
- 
   return (
-    <center>
-     <AppName/>
-     <AddTodo onNewItemAdded={onNewItemAdded}/>
-     <ErrorMsg todoItem={todoItem}/>
-      <TodoItem todoItems = {todoItem} handleDelete={handleDelete} />
-    </center>
-  )
+    <div className="container my-4">
+      <h2 className="text-center mb-4">📝 My Todo App</h2>
+      <AddTodo onNewItemAdded={handleNewItemAdded} />
+      <TodoList todos={todos} onDelete={handleDelete} />
+    </div>
+  );
 }
 
-export default App
+export default App;
